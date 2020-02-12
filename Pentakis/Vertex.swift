@@ -19,10 +19,10 @@ struct  ColoredVertex
     var x: GLfloat
     var y: GLfloat
     var z: GLfloat
-    var r: GLfloat
-    var g: GLfloat
-    var b: GLfloat
-    var a: GLfloat
+    var r: GLfloat = 1
+    var g: GLfloat = 1
+    var b: GLfloat = 1
+    var a: GLfloat = 1
 }
 }
 //#define kBytesPerVertex (sizeof(vertexStruct))
@@ -30,10 +30,10 @@ struct  ColoredVertex
 #define kNumVerticesCube 24
 #define kNumVerticesPentakis 180
 
-const GLfloat gC0 = 0.927050983124842272306880251548;
-const GLfloat gC1 = 1.33058699733550141141687582919;
-const GLfloat gC2 = 2.15293498667750705708437914596;
-const GLfloat gC3 = 2.427050983124842272306880251548;
+let gC0: GLfloat = 0.927050983124842272306880251548;
+let gC1: GLfloat = 1.33058699733550141141687582919;
+let gC2: GLfloat = 2.15293498667750705708437914596;
+let gC3: GLfloat = 2.427050983124842272306880251548;
 
 
 
