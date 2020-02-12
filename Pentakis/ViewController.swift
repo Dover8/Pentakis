@@ -23,6 +23,7 @@ class ViewController: GLKViewController {
     private var vao = GLuint()
     private var effect = GLKBaseEffect()
     private var rotation: Float = 0.0
+    private var rotMartrix = GLKMatrix4Identity
     
     private func setupGL() {
         context = EAGLContext(api: .openGLES3)
@@ -122,6 +123,24 @@ class ViewController: GLKViewController {
         tearDownGL()
     }
     
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = (touches.first)!
+        let location: CGPoint = touch.location(in: self.view)
+        
+        let lastLocation: CGPoint = touch.previousLocation(in: self.view)
+        let diff = CGPoint(x: lastLocation.x - location.x, y: lastLocation.y - location.y)
+        
+        let rotX = -1 * GLKMathDegreesToRadians(Float(diff.y/2))
+        let rotY = -1 * GLKMathDegreesToRadians(Float(diff.x/2))
+        
+        let isInvertable = UnsafeMutablePointer<Bool>.init(bitPattern: 0)
+        
+        let xAxis = GLKMatrix4MultiplyVector3(GLKMatrix4Invert(rotMartrix, isInvertable), GLKVector3(v: (1, 0, 0)))
+        rotMartrix = GLKMatrix4Rotate(rotMartrix, rotX, xAxis.x, xAxis.y, xAxis.z)
+        
+        let yAxis =
+            GLKMatrix4MultiplyVector3(GLKMatrix4Invert(rotMartrix, isInvertable), GLKVector3(v: (0, 1, 0)))
+            rotMartrix = GLKMatrix4Rotate(rotMartrix, rotY, yAxis.x, yAxis.y, yAxis.z)
     }
 
 }
@@ -138,6 +157,7 @@ extension ViewController: GLKViewControllerDelegate {
         
         //rotation += 90 * Float(timeSinceLastUpdate)
         //modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(rotation), 1, 1, 1)
+        modelViewMatrix = GLKMatrix4Multiply(modelViewMatrix, rotMartrix)
         
         effect.transform.modelviewMatrix = modelViewMatrix
     }
