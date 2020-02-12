@@ -27,58 +27,56 @@ struct  ColoredVertex
 }
 //#define kBytesPerVertex (sizeof(vertexStruct))
 
-#define kNumVerticesCube 24
-#define kNumVerticesPentakis 180
+let kNumVerticesCube = 24
+let kNumVerticesPentakis = 180
 
 let gC0: GLfloat = 0.927050983124842272306880251548;
 let gC1: GLfloat = 1.33058699733550141141687582919;
 let gC2: GLfloat = 2.15293498667750705708437914596;
 let gC3: GLfloat = 2.427050983124842272306880251548;
 
-
-
-const coloredVertexStruct Vertices[] = {
+var Vertices = [
     
-    {{0.0f,  gC0,  gC3}, {1, 1, 1, 1}}, //V0
-    {{0.0f,  gC0, -gC3}, {1, 1, 1, 1}}, //V1
-    {{0.0f, -gC0,  gC3}, {1, 1, 1, 1}}, //V2
-    {{0.0f, -gC0, -gC3}, {1, 1, 1, 1}}, //V3
+    ColoredVertex(x: 0.0, y: gC0, z: gC3), //V0
+    ColoredVertex(x: 0.0, y: gC0, z:-gC3), //V1
+    ColoredVertex(x: 0.0, y:-gC0, z: gC3), //V2
+    ColoredVertex(x: 0.0, y:-gC0, z:-gC3), //V3
     
-    {{gC3, 0.0f,  gC0}, {1, 1, 1, 1}}, //V4
-    {{gC3, 0.0f, -gC0}, {1, 1, 1, 1}}, //V5
-    {{-gC3, 0.0f,  gC0}, {1.0, 1.0, 1.0, 1.0}}, //V6
-    {{-gC3, 0.0f, -gC0}, {1, 1, 1, 1}}, //V7
+    ColoredVertex(x: gC3, y: 0.0, z: gC0), //V4
+    ColoredVertex(x: gC3, y: 0.0, z:-gC0), //V5
+    ColoredVertex(x:-gC3, y: 0.0, z: gC0), //V6
+    ColoredVertex(x:-gC3, y: 0.0, z:-gC0), //V7
     
-    {{gC0,  gC3, 0.0f}, {1, 1, 1, 1}}, //V8
-    {{gC0, -gC3, 0.0f}, {1, 1, 1, 1}}, //V9
-    {{-gC0,  gC3, 0.0f}, {1, 1, 1, 1}}, //V10
-    {{-gC0, -gC3, 0.0f}, {1, 1, 1, 1}}, //V11
+    ColoredVertex(x: gC0, y: gC3, z: 0.0), //V8
+    ColoredVertex(x: gC0, y:-gC3, z: 0.0), //V9
+    ColoredVertex(x:-gC0, y: gC3, z: 0.0), //V10
+    ColoredVertex(x:-gC0, y:-gC3, z: 0.0), //V11
     
-    {{gC1, 0.0f,  gC2}, {1, 1, 1, 1}}, //V12
-    {{gC1, 0.0f, -gC2}, {1, 1, 1, 1}}, //V13
-    {{-gC1, 0.0f,  gC2}, {1, 1, 1, 1}}, //V14
-    {{-gC1, 0.0f, -gC2}, {1, 1, 1, 1}}, //V15
+    ColoredVertex(x: gC1, y: 0.0, z: gC2), //V12
+    ColoredVertex(x: gC1, y: 0.0, z:-gC2), //V13
+    ColoredVertex(x:-gC1, y: 0.0, z: gC2), //V14
+    ColoredVertex(x:-gC1, y: 0.0, z:-gC2), //V15
     
-    {{gC2,  gC1, 0.0f}, {1, 1, 1, 1}}, //V16
-    {{gC2, -gC1, 0.0f}, {(189.f/255.f), (167.f/255.f), (7.f/255.f), 1.0f}}, //V17
-    {{-gC2,  gC1, 0.0f}, {1, 1, 1, 1}}, //V18
-    {{-gC2, -gC1, 0.0f}, {1, 1, 1, 1}}, //V19
+    ColoredVertex(x: gC2, y: gC1, z: 0.0), //V16
+    ColoredVertex(x: gC2, y:-gC1, z: 0.0, r:(189/255), g:(167/255), b:(7/255), a:1.0), //V17
+    ColoredVertex(x:-gC2, y: gC1, z: 0.0), //V18
+    ColoredVertex(x:-gC2, y:-gC1, z: 0.0), //V19
     
-    {{0.0f,  gC2,  gC1}, {0.0f, (144.f/255.f), (158.f/255.f), 1.0f}}, //V20
-    {{0.0f,  gC2, -gC1}, {(181.f/255.f), 0, (102.f/255.f), 1.0f}}, //V21
-    {{0.0f, -gC2,  gC1}, {1, 1, 1, 1}}, //V22
-    {{0.0f, -gC2, -gC1}, {0.0f,  (76.f/255.f), (125.f/255.f), 1.0f}}, //V23
+    ColoredVertex(x: 0.0, y: gC2, z: gC1, r: 0.0, g:(144/255), b:(158/255), a:1.0), //V20
+    ColoredVertex(x: 0.0, y: gC2, z:-gC1, r:(181/255), g: 0, b:(102/255), a:1.0), //V21
+    ColoredVertex(x: 0.0, y:-gC2, z: gC1), //V22
+    ColoredVertex(x: 0.0, y:-gC2, z:-gC1, r: 0.0, g:(76/255), b:(125/255), a:1.0), //V23
     
-    {{1.5f, 1.5f, 1.5f}, {1, 1, 1, 1}}, //V24
-    {{1.5f, 1.5f,-1.5f}, {1, 1, 1, 1}}, //V25
-    {{1.5f,-1.5f, 1.5f}, {1, 1, 1, 1}}, //V26
-    {{1.5f,-1.5f,-1.5f}, {1, 1, 1, 1}}, //V27
+    ColoredVertex(x: 1.5, y: 1.5, z: 1.5), //V24
+    ColoredVertex(x: 1.5, y: 1.5, z:-1.5), //V25
+    ColoredVertex(x: 1.5, y:-1.5, z: 1.5), //V26
+    ColoredVertex(x: 1.5, y:-1.5, z:-1.5), //V27
     
-    {{-1.5f, 1.5f, 1.5f}, {1, 1, 1, 1}}, //V28
-    {{-1.5f, 1.5f,-1.5f}, {1, 1, 1, 1}}, //V29
-    {{-1.5f,-1.5f, 1.5f}, {1, 1, 1, 1}}, //V30
-    {{-1.5f,-1.5f,-1.5f}, {1, 1, 1, 1}}  //V31
-};
+    ColoredVertex(x:-1.5, y: 1.5, z: 1.5), //V28
+    ColoredVertex(x:-1.5, y: 1.5, z:-1.5), //V29
+    ColoredVertex(x:-1.5, y:-1.5, z: 1.5), //V30
+    ColoredVertex(x:-1.5, y:-1.5, z:-1.5)  //V31
+]
 
 const GLubyte Pairs[] = {
     12,  0,
