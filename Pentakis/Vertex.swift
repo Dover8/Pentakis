@@ -8,3 +8,19 @@
 
 import GLKit
 
+struct Vertex {
+    var x: GLfloat
+    var y: GLfloat
+    var z: GLfloat
+}
+
+struct  ColoredVertex
+{
+    var x: GLfloat
+    var y: GLfloat
+    var z: GLfloat
+    var r: GLfloat = 1
+    var g: GLfloat = 1
+    var b: GLfloat = 1
+    var a: GLfloat = 1
+}
