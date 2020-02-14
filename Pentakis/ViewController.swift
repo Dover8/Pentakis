@@ -7,6 +7,7 @@
 //
 
 import GLKit
+import MetalKit
 
 extension Array {
     func size() -> Int {
@@ -14,114 +15,69 @@ extension Array {
     }
 }
 
-class ViewController: GLKViewController {
+class ViewController: UIViewController {
 
-    private var context: EAGLContext?
-    private var pentikisIndiceBuffer = GLuint()
-    private var pentikisPointBuffer = GLuint()
-    private var vbo = GLuint()
-    private var vao = GLuint()
-    private var effect = GLKBaseEffect()
+    // view and metal
+    @IBOutlet weak var metalView: MTKView!
+    private var metalDevice: MTLDevice!
+    private var metalCommandQueue: MTLCommandQueue!
+    
+    // buffers
+    private var vertexBuffer: MTLBuffer!
+    private var pairIndicesBuffer: MTLBuffer!
+    private var pointIndicesBuffer: MTLBuffer!
+    
+    // pipeline
+    private var pipelineState: MTLRenderPipelineState!
+
+    // view matrix
+    private var sceneMatrices = SceneMatrices()
+    private var uniformBuffer: MTLBuffer!
     private var rotation: Float = 0.0
     private var rotMartrix = GLKMatrix4Identity
     
-    private func setupGL() {
-        context = EAGLContext(api: .openGLES3)
+    private func setupMetal() {
         
-        EAGLContext.setCurrent(context)
+        metalDevice = MTLCreateSystemDefaultDevice()
+        metalCommandQueue = metalDevice.makeCommandQueue()
+        metalView.device = metalDevice
+        metalView.delegate = self
         
-        if let view = self.view as? GLKView, let context = context {
-            view.context = context
-            delegate = self
-        }
+        // set up the buffers
         
-        let vertexAttribColor = GLuint(GLKVertexAttrib.color.rawValue)
-        let vertexAttribPosition = GLuint(GLKVertexAttrib.position.rawValue)
-        let vertexSize = MemoryLayout<ColoredVertex>.stride
-        let colorOffset = MemoryLayout<GLfloat>.stride * 3
-        let colofOffsetPointer = UnsafeRawPointer(bitPattern: colorOffset)
+        let vertexBufferSize = Vertices.size()
+        vertexBuffer = metalDevice.makeBuffer(bytes: &Vertices, length: vertexBufferSize, options: .storageModeShared)
         
-        glGenVertexArraysOES(1, &vao)
+        let pairIndicesBufferSize = Pairs.size()
+        pairIndicesBuffer = metalDevice.makeBuffer(bytes: &Pairs, length: pairIndicesBufferSize, options: .storageModeShared)
         
-        glBindVertexArrayOES(vao)
+        let pointIndicesBufferSize = Points.size()
+        pointIndicesBuffer = metalDevice.makeBuffer(bytes: &Points, length: pointIndicesBufferSize, options: .storageModeShared)
         
-        glGenBuffers(1, &vbo)
-        glBindBuffer(GLenum(GL_ARRAY_BUFFER), vbo)
-        glBufferData(GLenum(GL_ARRAY_BUFFER),
-                     Vertices.size(),
-                     Vertices,
-                     GLenum(GL_STATIC_DRAW))
+        // set up the shaders
+        let defaultLibrary = metalDevice.makeDefaultLibrary()!
+        let fragmentProgram = defaultLibrary.makeFunction(name: "basic_fragment")
+        let vertexProgram = defaultLibrary.makeFunction(name: "basic_vertex")
         
-        glEnableVertexAttribArray(vertexAttribPosition)
-        glVertexAttribPointer(vertexAttribPosition, 3,
-                              GLenum(GL_FLOAT),
-                              GLboolean(UInt8(GL_FALSE)),
-                              GLsizei(vertexSize),
-                              nil)
+        //set up the pipeline
+        let pipelineDescriptor = MTLRenderPipelineDescriptor()
+        pipelineDescriptor.vertexFunction = vertexProgram
+        pipelineDescriptor.fragmentFunction = fragmentProgram
+        pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         
-        glEnableVertexAttribArray(vertexAttribColor)
-        glVertexAttribPointer(vertexAttribColor,
-                              4,
-                              GLenum(GL_FLOAT),
-                              GLboolean(UInt8(GL_FALSE)),
-                              GLsizei(vertexSize),
-                              colofOffsetPointer)
+        // set up projection matrix (will be recalcuted in drawableSizeWillchange)
+        let aspect = fabsf(Float(metalView.drawableSize.width) / Float(metalView.drawableSize.height))
+        let projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), aspect, 0.1, 50)
+        sceneMatrices.projectionMatrix = projectionMatrix
         
-        glGenBuffers(1, &pentikisIndiceBuffer)
-        glBindBuffer(GLenum(GL_ELEMENT_ARRAY_BUFFER), pentikisIndiceBuffer)
-        glBufferData(GLenum(GL_ELEMENT_ARRAY_BUFFER),
-                     Pairs.size(),
-                     Pairs,
-                     GLenum(GL_STATIC_DRAW))
-        
-//        glGenBuffers(1, &pentikisPointBuffer)
-//        glBindBuffer(GLenum(GL_ELEMENT_ARRAY_BUFFER), pentikisPointBuffer)
-//        glBufferData(GLenum(GL_ELEMENT_ARRAY_BUFFER),
-//                     Points.size(),
-//                     Points,
-//                     GLenum(GL_STATIC_DRAW))
-        
-        // clear the buffers
-        glBindVertexArray(0)
-        glBindBuffer(GLenum(GL_ARRAY_BUFFER), 0)
-        glBindBuffer(GLenum(GL_ELEMENT_ARRAY_BUFFER), 0)
-    }
-    
-    private func tearDownGL() {
-        EAGLContext.setCurrent(context)
-        
-        glDeleteBuffers(1, &vao)
-        glDeleteBuffers(1, &vbo)
-        glDeleteBuffers(1, &pentikisIndiceBuffer)
-        glDeleteBuffers(1, &pentikisPointBuffer)
-        
-        EAGLContext.setCurrent(nil)
-        
-        context = nil
-    }
+        pipelineState = try! metalDevice.makeRenderPipelineState(descriptor: pipelineDescriptor)
+}
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupGL()
+        setupMetal()
     }
     
-    override func glkView(_ view: GLKView, drawIn rect: CGRect) {
-        glClearColor(0.85, 0.85, 0.85, 10)
-        
-        glClear(GLbitfield(GL_COLOR_BUFFER_BIT))
-        
-        effect.prepareToDraw()
-        glBindVertexArray(vao)
-        glDrawElements(GLenum(GL_LINES),
-                       GLsizei(Pairs.count),
-                       GLenum(GL_UNSIGNED_BYTE),
-                       nil)
-        glBindVertexArray(0)
-    }
-    
-    deinit {
-        tearDownGL()
-    }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = (touches.first)!
@@ -145,20 +101,54 @@ class ViewController: GLKViewController {
 
 }
 
-extension ViewController: GLKViewControllerDelegate {
-    func  glkViewControllerUpdate(_ controller: GLKViewController) {
-        let aspect = fabsf(Float(view.bounds.size.width) / Float(view.bounds.size.height))
+extension ViewController: MTKViewDelegate {
+    
+    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+        let aspect = fabsf(Float(size.width) / Float(size.height))
+        let projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), aspect, 0.1, 50)
+        sceneMatrices.projectionMatrix = projectionMatrix
+    }
+    
+    func draw(in view: MTKView) {
+        guard let drawable = view.currentDrawable else {
+            return
+        }
         
-        let projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0), aspect, 0.1, 50.0)
+        let renderPassDescriptor = MTLRenderPassDescriptor()
+        renderPassDescriptor.colorAttachments[0].texture = drawable.texture
+        renderPassDescriptor.colorAttachments[0].loadAction = .clear
+        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
         
-        effect.transform.projectionMatrix = projectionMatrix
+        guard let commandBuffer = metalCommandQueue.makeCommandBuffer() else {
+            return
+        }
         
-        var modelViewMatrix = GLKMatrix4MakeTranslation(0, 0, -7.5)
+        guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
+            return
+        }
         
-        //rotation += 90 * Float(timeSinceLastUpdate)
-        //modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(rotation), 1, 1, 1)
+        // Frame drawing goes here
+        renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+        var modelViewMatrix = GLKMatrix4MakeTranslation(0.0, 0.0, -7.5)
         modelViewMatrix = GLKMatrix4Multiply(modelViewMatrix, rotMartrix)
         
-        effect.transform.modelviewMatrix = modelViewMatrix
+        sceneMatrices.modelViewMatrix = modelViewMatrix
+        
+        let uniformBufferSize = MemoryLayout.size(ofValue: sceneMatrices)
+        uniformBuffer = metalDevice.makeBuffer(bytes: &sceneMatrices,
+                                               length: uniformBufferSize,
+                                               options: .storageModeShared)
+        renderEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
+        renderEncoder.setRenderPipelineState(pipelineState)
+        renderEncoder.drawIndexedPrimitives(type: .line,
+                                            indexCount: Pairs.count,
+                                            indexType: .uint32,
+                                            indexBuffer: pairIndicesBuffer,
+                                            indexBufferOffset: 0)
+        
+        renderEncoder.endEncoding()
+        
+        commandBuffer.present(drawable)
+        commandBuffer.commit()
     }
 }

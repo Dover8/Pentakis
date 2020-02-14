@@ -8,6 +8,11 @@
 
 import GLKit
 
+struct SceneMatrices {
+    var projectionMatrix: GLKMatrix4 = GLKMatrix4Identity
+    var modelViewMatrix: GLKMatrix4 = GLKMatrix4Identity
+}
+
 struct Vertex {
     var x: GLfloat
     var y: GLfloat
@@ -78,7 +83,7 @@ var Vertices = [
     ColoredVertex(x:-1.5, y:-1.5, z:-1.5)  //V31
 ]
 
-var Pairs: [GLubyte] = [
+var Pairs: [UInt32] = [
     12,  0,
     0, 2,
     12,  2,
@@ -213,12 +218,12 @@ var Pairs: [GLubyte] = [
     31, 3
 ]
 
-var Points: [GLubyte] = [
+var Points: [UInt32] = [
     17, 20,
     23, 21
 ]
 
-var Indices: [GLubyte] = [
+var Indices: [UInt32] = [
 
     12,  0,  2,
     12,  2, 26,
