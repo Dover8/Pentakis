@@ -29,7 +29,12 @@ struct  ColoredVertex
     var b: GLfloat = 1
     var a: GLfloat = 1
 }
+
+struct BaycentricVertex
+{
+    var baycentric: [Float];
 }
+
 //#define kBytesPerVertex (sizeof(vertexStruct))
 
 let kNumVerticesCube = 24

@@ -5,6 +5,41 @@
 	<key>logFormatVersion</key>
 	<integer>10</integer>
 	<key>logs</key>
-	<dict/>
+	<dict>
+		<key>4AFE4914-4487-446D-B31D-6B67BD441692</key>
+		<dict>
+			<key>className</key>
+			<string>DBGConsoleLog</string>
+			<key>documentTypeString</key>
+			<string>com.apple.dt.IDE.DebuggerLogContentType</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.DebugLog</string>
+			<key>fileName</key>
+			<string>4AFE4914-4487-446D-B31D-6B67BD441692.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pentakis project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pentakis</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Debug Pentakis</string>
+			<key>timeStartedRecording</key>
+			<real>603388377.388111</real>
+			<key>timeStoppedRecording</key>
+			<real>603388392.91147995</real>
+			<key>title</key>
+			<string>Debug Pentakis</string>
+			<key>uniqueIdentifier</key>
+			<string>4AFE4914-4487-446D-B31D-6B67BD441692</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

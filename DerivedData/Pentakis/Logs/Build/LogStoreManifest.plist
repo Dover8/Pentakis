@@ -5,6 +5,75 @@
 	<key>logFormatVersion</key>
 	<integer>10</integer>
 	<key>logs</key>
-	<dict/>
+	<dict>
+		<key>011C6C6E-F36D-444E-86B7-2FAFBDB8DF71</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>011C6C6E-F36D-444E-86B7-2FAFBDB8DF71.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pentakis project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pentakis</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pentakis</string>
+			<key>timeStartedRecording</key>
+			<real>628013671.70307505</real>
+			<key>timeStoppedRecording</key>
+			<real>628013684.42053199</real>
+			<key>title</key>
+			<string>Build Pentakis</string>
+			<key>uniqueIdentifier</key>
+			<string>011C6C6E-F36D-444E-86B7-2FAFBDB8DF71</string>
+		</dict>
+		<key>11ACE595-4715-47E6-88DE-6B678E284917</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>11ACE595-4715-47E6-88DE-6B678E284917.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>Pentakis project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Pentakis</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Build Pentakis</string>
+			<key>timeStartedRecording</key>
+			<real>603388375.91152799</real>
+			<key>timeStoppedRecording</key>
+			<real>603388375.98581898</real>
+			<key>title</key>
+			<string>Build Pentakis</string>
+			<key>uniqueIdentifier</key>
+			<string>11ACE595-4715-47E6-88DE-6B678E284917</string>
+		</dict>
+	</dict>
 </dict>
 </plist>
